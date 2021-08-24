@@ -1,0 +1,20 @@
+<head>
+  <title>メモ編集</title>
+</head>
+
+<% @memo_file_array.each do |file| %>
+  <h1>Title</h1>
+  <form method="post" action="/memos/<%= "#{file[:memo_id]}" %>">
+    <input type="hidden" name="_method" value="patch">
+    <input type="text" name="title" required="required" value="<%= "#{file[:title]}" %>">
+
+    <h1>Memo</h1>
+    <textarea name="content" cols="70" rows="8"><%= "#{file[:content]}" %></textarea>
+    <p><button class="keep_memo_button" type="submit">保存</button></p>
+  </form>
+
+  <form method="get" action="/memos/<%=file[:memo_id]%>">
+    <button class="jump_toppage_button" type="submit">メモ詳細へ</button>
+  </form>
+
+<% end %>
