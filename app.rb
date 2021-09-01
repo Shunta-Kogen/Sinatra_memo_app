@@ -11,21 +11,21 @@ helpers do
   end
 end
 
-def write_file(memo_id, memo)
+def make_memo_file(memo_id, memo)
   File.open("memo_data/#{memo_id}.json", 'w') do |file|
     JSON.dump(memo, file)
   end
 end
 
-def create_memo_file_array(memo_id)
+def read_memo_file(memo_id)
   memo_file = Dir.glob("memo_data/#{memo_id}.json")
-  @memo_file_array = memo_file.map { |files| JSON.parse(File.open(files).read, symbolize_names: true) }
+  memo_file.map {|files| JSON.parse(File.open(files).read, symbolize_names: true) }
 end
 
 # トップページ
 get '/memos' do
-  sorted_memo_files = Dir.glob('memo_data/*.json').sort_by { |file| File.mtime(file) }
-  @sorted_memo_files_array = sorted_memo_files.reverse.map { |files| JSON.parse(File.open(files).read, symbolize_names: true) }
+  asc_memo_filenames = Dir.glob('memo_data/*.json').sort_by {|file| File.mtime(file)}
+  @desc_memo_filenames = asc_memo_filenames.reverse.map { |files| JSON.parse(File.open(files).read, symbolize_names: true) }
   erb :top
 end
 
@@ -34,7 +34,7 @@ post '/memos' do
   @title = params[:title]
   @content = params[:content]
   memo = { 'memo_id' => memo_id.to_s, 'title' => @title, 'content' => @content }
-  write_file(memo_id, memo)
+  make_memo_file(memo_id, memo)
   redirect to('/memos')
 end
 
@@ -46,14 +46,14 @@ end
 # メモ表示ページ
 get '/memos/:id' do
   memo_id = params[:id]
-  create_memo_file_array(memo_id)
+  @memo_files = read_memo_file(memo_id)
   erb :show
 end
 
 patch '/memos/:id' do
   memo_id = params[:id]
   memo = { 'memo_id' => params[:id].to_s, 'title' => params[:title], 'content' => params[:content] }
-  write_file(memo_id, memo)
+  make_memo_file(memo_id, memo)
   redirect to("/memos/#{params[:id]}")
 end
 
@@ -65,6 +65,6 @@ end
 # メモ編集ページ
 get '/memos/:id/edit' do
   memo_id = params[:id]
-  create_memo_file_array(memo_id)
+  @memo_files = read_memo_file(memo_id)
   erb :edit
 end
