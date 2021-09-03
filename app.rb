@@ -24,8 +24,8 @@ end
 
 # トップページ
 get '/memos' do
-  asc_memo_filenames = Dir.glob('memo_data/*.json').sort_by {|file| File.mtime(file)}
-  @desc_memo_filenames = asc_memo_filenames.reverse.map { |files| JSON.parse(File.open(files).read, symbolize_names: true) }
+  memo_filename = Dir.glob('memo_data/*.json').sort_by {|file| File.mtime(file)}
+  @memo_filenames = memo_filename.reverse.map { |files| JSON.parse(File.open(files).read, symbolize_names: true) }
   erb :top
 end
 

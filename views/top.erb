@@ -4,7 +4,7 @@
 
 <ul class="memo_title">
   <h2>Title</h2>
-  <% @desc_memo_filenames.each do |file| %>
+  <% @memo_filenames.each do |file| %>
     <li>
       <a href='/memos/<%= file[:memo_id] %>'><%= "#{h(file[:title])}" %></a>
     </li>
