@@ -2,8 +2,10 @@
 
 require 'sinatra'
 require 'sinatra/reloader'
-require 'json'
 require 'securerandom'
+require 'pg'
+
+CONNECTION = PG.connect(dbname: 'sinatra_memo')
 
 helpers do
   def h(text)
@@ -11,21 +13,29 @@ helpers do
   end
 end
 
-def make_memo_file(memo_id, memo)
-  File.open("memo_data/#{memo_id}.json", 'w') do |file|
-    JSON.dump(memo, file)
-  end
+def insert_memo(memo_id, title, content)
+  CONNECTION.exec('INSERT INTO memos VALUES ($1, $2, $3);', [memo_id, title, content])
 end
 
-def read_memo_file(memo_id)
-  memo_file = Dir.glob("memo_data/#{memo_id}.json")
-  memo_file.map {|files| JSON.parse(File.open(files).read, symbolize_names: true) }
+def update_memo(memo_id, title, content)
+  CONNECTION.exec('UPDATE memos SET title = $1, content = $2 WHERE memo_id = $3;', [title, content, memo_id])
+end
+
+def delete_memo(memo_id)
+  CONNECTION.exec('DELETE FROM memos WHERE memo_id = $1;', [memo_id])
+end
+
+def select_memo(memo_id)
+  CONNECTION.exec('SELECT * FROM memos WHERE memo_id = $1;', [memo_id]).to_a
+end
+
+def select_memos
+  CONNECTION.exec('SELECT * FROM memos;').to_a
 end
 
 # トップページ
 get '/memos' do
-  memo_filename = Dir.glob('memo_data/*.json').sort_by {|file| File.mtime(file)}
-  @memo_filenames = memo_filename.reverse.map { |files| JSON.parse(File.open(files).read, symbolize_names: true) }
+  @memo_contents = select_memos
   erb :top
 end
 
@@ -33,8 +43,7 @@ post '/memos' do
   memo_id = SecureRandom.alphanumeric
   @title = params[:title]
   @content = params[:content]
-  memo = { 'memo_id' => memo_id.to_s, 'title' => @title, 'content' => @content }
-  make_memo_file(memo_id, memo)
+  insert_memo(memo_id, @title, @content)
   redirect to('/memos')
 end
 
@@ -46,25 +55,27 @@ end
 # メモ表示ページ
 get '/memos/:id' do
   memo_id = params[:id]
-  @memo_files = read_memo_file(memo_id)
+  @memo_contents = select_memo(memo_id)
   erb :show
 end
 
 patch '/memos/:id' do
   memo_id = params[:id]
-  memo = { 'memo_id' => params[:id].to_s, 'title' => params[:title], 'content' => params[:content] }
-  make_memo_file(memo_id, memo)
+  title = params[:title]
+  content = params[:content]
+  update_memo(memo_id, title, content)
   redirect to("/memos/#{params[:id]}")
 end
 
 delete '/memos/:id' do
-  File.delete("memo_data/#{params['id']}.json")
+  memo_id = params[:id]
+  delete_memo(memo_id)
   redirect to('/memos')
 end
 
 # メモ編集ページ
 get '/memos/:id/edit' do
   memo_id = params[:id]
-  @memo_files = read_memo_file(memo_id)
+  @memo_contents = select_memo(memo_id)
   erb :edit
 end
