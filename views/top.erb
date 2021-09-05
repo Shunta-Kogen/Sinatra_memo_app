@@ -1,0 +1,16 @@
+<head>
+  <title>メモトップ</title>
+</head>
+
+<ul class="memo_title">
+  <h2>Title</h2>
+  <% @memo_filenames.each do |file| %>
+    <li>
+      <a href='/memos/<%= file[:memo_id] %>'><%= "#{h(file[:title])}" %></a>
+    </li>
+  <% end %>
+</ul>
+
+<form method="get" action="/memos/new">
+  <button class="creare_memo_button" type="submit">新規作成!</button>
+</form>
