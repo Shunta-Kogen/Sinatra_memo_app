@@ -2,17 +2,17 @@
   <title>メモ詳細</title>
 </head>
 
-<% @memo_files.each do |file| %>
+<% @memo_contents.each do |file| %>
   <h1>Title</h1>
-  <h3><%= "#{h(file[:title])}" %></h3>
+  <h3><%= "#{h(file['title'])}" %></h3>
   <h1>Memo</h1>
-  <h3><%= "#{h(file[:content])}" %></h3>
+  <h3><%= "#{h(file['content'])}" %></h3>
 
-  <form method="get" action="/memos/<%= "#{file[:memo_id]}" %>/edit">
+  <form method="get" action="/memos/<%= "#{file['memo_id']}" %>/edit">
     <button class="edit_memo_button" type="submit">編集</button>
   </form>
 
-  <form method="post" action="/memos/<%= "#{file[:memo_id]}" %>">
+  <form method="post" action="/memos/<%= "#{file['memo_id']}" %>">
     <input type="hidden" name="_method" value="delete">
     <button class="delete_memo_button" type="submit">削除</button></p>
   </form>
