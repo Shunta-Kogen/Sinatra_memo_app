@@ -16,7 +16,7 @@ CREATE DATABASE sinatra_memo;
 ```
 `sinatra_memo`データベースに移動
 ```
-/c sinatra_memo
+\c sinatra_memo
 ```
 `memos`テーブルを作成
 ```
