@@ -35,7 +35,7 @@ end
 
 # トップページ
 get '/memos' do
-  @memo_contents = select_memos
+  @memo_contents = select_memos.reverse
   erb :top
 end
 
