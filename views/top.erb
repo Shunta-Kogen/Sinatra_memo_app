@@ -5,9 +5,9 @@
 <ul class="memo_title">
   <h2>Title</h2>
 
-  <% @memo_contents.reverse.each do |file| %>
+  <% @memo_contents.each do |content| %>
     <li>
-      <a href='/memos/<%= file['memo_id'] %>'><%= h(file['title']) %></a>
+      <a href='/memos/<%= content['memo_id'] %>'><%= h(content['title']) %></a>
     </li>
   <% end %>
 
