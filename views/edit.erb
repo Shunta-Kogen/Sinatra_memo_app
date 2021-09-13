@@ -2,18 +2,18 @@
   <title>メモ編集</title>
 </head>
 
-<% @memo_contents.each do |content| %>
+<% @memos.each do |memo| %>
   <h1>Title</h1>
-  <form method="post" action="/memos/<%= "#{content['memo_id']}" %>">
+  <form method="post" action="/memos/<%= "#{memo['memo_id']}" %>">
     <input type="hidden" name="_method" value="patch">
-    <input type="text" name="title" required="required" value="<%= "#{h(content['title'])}" %>">
+    <input type="text" name="title" required="required" value="<%= "#{h(memo['title'])}" %>">
 
     <h1>Memo</h1>
-    <textarea name="content" cols="70" rows="8"><%= "#{h(content['content'])}" %></textarea>
+    <textarea name="content" cols="70" rows="8"><%= "#{h(memo['content'])}" %></textarea>
     <p><button class="keep_memo_button" type="submit">保存</button></p>
   </form>
 
-  <form method="get" action="/memos/<%=content['memo_id']%>">
+  <form method="get" action="/memos/<%=memo['memo_id']%>">
     <button class="jump_toppage_button" type="submit">メモ詳細へ</button>
   </form>
 

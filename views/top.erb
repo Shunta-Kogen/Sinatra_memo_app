@@ -5,9 +5,9 @@
 <ul class="memo_title">
   <h2>Title</h2>
 
-  <% @memo_contents.each do |content| %>
+  <% @memos.each do |memo| %>
     <li>
-      <a href='/memos/<%= content['memo_id'] %>'><%= h(content['title']) %></a>
+      <a href='/memos/<%= memo['memo_id'] %>'><%= h(memo['title']) %></a>
     </li>
   <% end %>
 

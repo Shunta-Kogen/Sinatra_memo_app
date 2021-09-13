@@ -35,7 +35,7 @@ end
 
 # トップページ
 get '/memos' do
-  @memo_contents = select_memos.reverse
+  @memos = select_memos.reverse
   erb :top
 end
 
@@ -55,7 +55,7 @@ end
 # メモ表示ページ
 get '/memos/:id' do
   memo_id = params[:id]
-  @memo_contents = select_memo(memo_id)
+  @memos = select_memo(memo_id)
   erb :show
 end
 
@@ -76,6 +76,6 @@ end
 # メモ編集ページ
 get '/memos/:id/edit' do
   memo_id = params[:id]
-  @memo_contents = select_memo(memo_id)
+  @memos = select_memo(memo_id)
   erb :edit
 end
