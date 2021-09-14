@@ -4,11 +4,13 @@
 
 <ul class="memo_title">
   <h2>Title</h2>
-  <% @memo_filenames.each do |file| %>
+
+  <% @memos.each do |memo| %>
     <li>
-      <a href='/memos/<%= file[:memo_id] %>'><%= "#{h(file[:title])}" %></a>
+      <a href='/memos/<%= memo['memo_id'] %>'><%= h(memo['title']) %></a>
     </li>
   <% end %>
+
 </ul>
 
 <form method="get" action="/memos/new">
